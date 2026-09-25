@@ -23,7 +23,7 @@ class Grid:
         self.width = width
         self.height = height
         self.grid_list : [[int]] = [[0 for _ in range(self.width)] for _ in range(self.height)]
-        self.cell_list : [[Cell]] = [[DebugCell(x,y) for y in range(self.width)] for x in range(self.height)]
+        self.cell_list : [[DebugCell]] = [[DebugCell(x,y) for y in range(self.width)] for x in range(self.height)]
         self.cell_size = cell_size
 
     def get_cell_world_position(self, x :int, y :int) -> tuple:
@@ -44,7 +44,17 @@ class Grid:
     def set_cell_value(self, pos : tuple, value : int) -> None:
         self.__set_cell_value(self.__get_cell(pos), value)
 
+    def get_cell_value(self, pos : tuple) -> int:
+        x,y = pos
+        if x >= 0 and x < self.width and y >= 0 and y < self.height:
+            return self.grid_list[x][y]
+        return 0
 
+    def get_cell_value_world(self, pos) -> int:
+        x,y = self.__get_cell(pos)
+        if x >= 0 and x < self.width and y >= 0 and y < self.height:
+            return self.grid_list[x][y]
+        return 0
 
 def debug_grid():
     # Initialise screen
@@ -72,6 +82,8 @@ def debug_grid():
         # mouse input
         if pygame.mouse.get_just_pressed()[0]:
             grid.set_cell_value(pygame.mouse.get_pos(), 1)
+        if pygame.mouse.get_just_pressed()[2]:
+            print(grid.get_cell_value_world(pygame.mouse.get_pos()))
 
         # draw the grid
         screen.blit(background, (0, 0))
